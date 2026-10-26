@@ -1,0 +1,48 @@
+[
+  {
+    "id": "baba",
+    "name": "فرج الجيوشي",
+    "profile": "people/BABA/profile.jpg",
+    "memories": [
+      {
+        "title": "اهلا بك",
+        "date": "2026",
+        "images": [
+          "people/BABA/P1.jpg",
+          "people/BABA/P2.jpg"
+        ],
+        "text": "الف ليلية وليلة"
+      }
+    ]
+  },
+  {
+    "id": "sasa",
+    "name": "صاصا",
+    "profile": "people/SASA/profile.jpg",
+    "memories": [
+      {
+        "title": "الفرح فرحنا",
+        "date": "2023",
+        "images": [
+          "people/SASA/P1.jpg"
+        ],
+        "text": "أجمل صيف قضيناه"
+      }
+    ]
+  },
+  {
+    "id": "Yousef",
+    "name": "يوسف",
+    "profile": "people/JOO/profile.jpg",
+    "memories": [
+      {
+        "title": "ONE YEAR",
+        "date": "2022",
+        "images": [
+          "people/JOO/P1.jpg"
+        ],
+        "text": "DONE"
+      }
+    ]
+  }
+]
