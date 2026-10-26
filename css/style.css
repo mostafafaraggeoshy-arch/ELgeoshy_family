@@ -1,60 +1,122 @@
-body { font-family: Tahoma, sans-serif; background: #fdf6ee; margin: 0; padding: 20px; }
-h1 { text-align: center; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
-.card { background: #fff; border-radius: 12px; padding: 10px; text-align: center; box-shadow: 0 2px 8px #0002; cursor: pointer; }
-.card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
-/* خلفية نافذة تكبير الصورة */
+body {
+  font-family: Tahoma, Arial, sans-serif;
+  background: #fdf6ee;
+  margin: 0;
+  padding: 20px;
+  direction: rtl;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+/* تصميم الكرت */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* ضبط الصورة داخل الفريم ليظهر مقاسها كاملاً بدون قص */
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain; /* إظهار الصورة كاملة داخل الإطار دون قص */
+  background-color: #f4f4f4; /* خلفية ناعمة لتعبئة الأطراف الفاضية */
+  border-radius: 8px;
+}
+
+.card h3 {
+  margin: 10px 0 5px 0;
+  color: #222;
+}
+
+.card small {
+  color: #777;
+}
+
+.card p {
+  color: #555;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* نافذة العرض المكبر (Modal) */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
-  padding-top: 50px;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
   background-color: rgba(0, 0, 0, 0.9);
 }
 
-/* الصورة داخل النافذة */
 .modal-content {
   margin: auto;
   display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   max-width: 90%;
   max-height: 85vh;
+  object-fit: contain; /* إظهار الصورة المكبرة بكامل تفاصيلها */
   border-radius: 8px;
-  object-fit: contain;
 }
 
-/* زر الإغلاق (X) */
+/* زر الإغلاق */
 .close {
   position: absolute;
   top: 15px;
-  right: 35px;
+  right: 25px;
   color: #fff;
-  font-size: 40px;
+  font-size: 35px;
   font-weight: bold;
   cursor: pointer;
+  z-index: 1010;
 }
 
 .close:hover {
-  color: #bbb;
+  color: #ccc;
 }
-/* أسهم التنقل */
+
+/* أزرار الأسهم للتنقل */
 .nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.25);
   color: white;
   border: none;
-  font-size: 30px;
-  padding: 16px;
+  font-size: 28px;
+  padding: 12px 18px;
   cursor: pointer;
   border-radius: 50%;
   transition: 0.3s;
   user-select: none;
+  z-index: 1010;
 }
 
 .nav-btn:hover {
