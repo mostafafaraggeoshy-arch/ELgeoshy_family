@@ -1,40 +1,59 @@
+let allPeopleData = [];
 let currentImages = [];
 let currentImageIndex = 0;
-
 let touchStartX = 0;
 let touchEndX = 0;
 
 async function init() {
   try {
     const res = await fetch('data/people.json');
-    const people = await res.json();
-    const peopleDiv = document.getElementById('people');
-    
-    peopleDiv.innerHTML = '';
-
-    people.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `<img src="${p.profile}" alt="${p.name}"><h3>${p.name}</h3>`;
-      card.onclick = () => showMemories(p);
-      peopleDiv.appendChild(card);
-    });
-
+    allPeopleData = await res.json();
+    showMainPage();
     setupMobileSwipe();
   } catch (error) {
-    console.error('خطأ في تحميل الملفات:', error);
+    console.error('خطأ في تحميل البيانات:', error);
   }
 }
 
-function showMemories(person) {
-  const div = document.getElementById('memories');
-  div.innerHTML = '';
+// عرض القائمة الرئيسية لجميع أفراد العائلة
+function showMainPage() {
+  const peopleDiv = document.getElementById('people');
+  const memoriesDiv = document.getElementById('memories');
   
-  const title = document.createElement('h2');
-  title.style.gridColumn = '1 / -1';
-  title.style.textAlign = 'center';
-  title.textContent = `ذكريات ${person.name}`;
-  div.appendChild(title);
+  memoriesDiv.innerHTML = ''; // إخفاء قسم الذكريات
+  peopleDiv.style.display = 'grid'; // إظهار شبكة الأشخاص
+
+  peopleDiv.innerHTML = '';
+  allPeopleData.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<img src="${p.profile}" alt="${p.name}"><h3>${p.name}</h3>`;
+    card.onclick = () => openProfile(p);
+    peopleDiv.appendChild(card);
+  });
+}
+
+// فتح بروفايل الشخص بالكامل في نفس التاب
+function openProfile(person) {
+  const peopleDiv = document.getElementById('people');
+  const memoriesDiv = document.getElementById('memories');
+
+  peopleDiv.style.display = 'none'; // إخفاء قائمة الأشخاص
+
+  // بناء واجهة البروفايل الكاملة
+  memoriesDiv.innerHTML = `
+    <button class="back-btn" onclick="showMainPage()">⬅ العودة للقائمة الرئيسية</button>
+    
+    <div class="profile-header">
+      <img src="${person.profile}" alt="${person.name}">
+      <h2>${person.name}</h2>
+    </div>
+
+    <h3 style="text-align:center; margin-top:20px;">معرض الذكريات 📸</h3>
+    <div id="memoriesGrid" class="grid"></div>
+  `;
+
+  const memoriesGrid = document.getElementById('memoriesGrid');
 
   person.memories.forEach(m => {
     const card = document.createElement('div');
@@ -50,10 +69,11 @@ function showMemories(person) {
       <small>${m.date}</small>
       <p>${m.text}</p>
     `;
-    div.appendChild(card);
+    memoriesGrid.appendChild(card);
   });
 }
 
+// فتح الصورة بكامل الشاشة
 function openModal(imagesList, index = 0) {
   currentImages = imagesList;
   currentImageIndex = index;
@@ -74,7 +94,6 @@ function updateModalImage() {
 
 function changeImage(direction) {
   if (!currentImages || currentImages.length === 0) return;
-  
   currentImageIndex += direction;
   
   if (currentImageIndex >= currentImages.length) {
@@ -82,59 +101,46 @@ function changeImage(direction) {
   } else if (currentImageIndex < 0) {
     currentImageIndex = currentImages.length - 1;
   }
-  
   updateModalImage();
 }
 
 function closeModal() {
   const modal = document.getElementById('imageModal');
-  if (modal) {
-    modal.style.display = 'none';
-  }
+  if (modal) modal.style.display = 'none';
 }
 
 function setupMobileSwipe() {
   const modalElement = document.getElementById('imageModal');
   if (!modalElement) return;
 
-  modalElement.addEventListener('touchstart', function(event) {
-    touchStartX = event.changedTouches[0].screenX;
+  modalElement.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
   }, false);
 
-  modalElement.addEventListener('touchend', function(event) {
-    touchEndX = event.changedTouches[0].screenX;
+  modalElement.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
     handleSwipe();
   }, false);
 }
 
 function handleSwipe() {
   const swipeThreshold = 50;
-  if (touchStartX - touchEndX > swipeThreshold) {
-    changeImage(1);
-  }
-  if (touchEndX - touchStartX > swipeThreshold) {
-    changeImage(-1);
-  }
+  if (touchStartX - touchEndX > swipeThreshold) changeImage(1);
+  if (touchEndX - touchStartX > swipeThreshold) changeImage(-1);
 }
 
-window.addEventListener('keydown', function(event) {
+window.addEventListener('keydown', function(e) {
   const modal = document.getElementById('imageModal');
   if (modal && modal.style.display === 'block') {
-    if (event.key === 'ArrowRight') {
-      changeImage(1);
-    } else if (event.key === 'ArrowLeft') {
-      changeImage(-1);
-    } else if (event.key === 'Escape') {
-      closeModal();
-    }
+    if (e.key === 'ArrowRight') changeImage(1);
+    if (e.key === 'ArrowLeft') changeImage(-1);
+    if (e.key === 'Escape') closeModal();
   }
 });
 
-window.onclick = function(event) {
+window.onclick = function(e) {
   const modal = document.getElementById('imageModal');
-  if (event.target === modal) {
-    closeModal();
-  }
+  if (e.target === modal) closeModal();
 };
 
 init();
